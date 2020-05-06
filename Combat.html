@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fight Clubbing</title>
+<style>
+    #healthwrap {
+        float: right;
+    }
+    #enemywrap{
+        text-align: center;
+    }
+
+    #action {
+        text-align: center;
+        margin-top: 25%;
+        clear: both;
+    }
+
+</style>
+</head>
+<body>
+    <div id="healthwrap">
+        Your HP: <div id="healthv"></div>
+        Health Potions: <div id="potionv"></div>
+        Equipped Weapon: <div id="weaponv"></div>
+    </div>
+
+    <div id=" hpwrap">
+        Enemy HP:<div id="bossHP"></div>
+    </div>
+
+    <div id="enemywrap">
+        Boss:<div id="bossInfo"></div>
+    </div>
+
+<div id="action">
+    <div id="infoTab"></div>
+    <button onclick="attack()">Attack!</button>
+    <button onclick="runAway()">Run Away</button>
+    <button onclick="hPotions()">Heal</button>
+    <br>
+    <br>
+    <div id="wslot"></div>
+</div>
+    <script src="Enemies.js"></script>
+    <script src="functions.js"></script>
+<script>
+    alert("Upon a darkened hilltop you stand, amongst the pouring rain. As the raindrops pelt your eyes, a flash of lightning strikes. For a split second, the hill is as bright as day. You glance" +
+        " downwards and in the brief second before you are plunged back into darkness, your eyes make out a small podium made of stone. On top lies a stone tablet and a chisel. In the darkness, You reach down, " +
+            "and grasp for the chisel when you hear a noise from the bottom of the hill. A noise which is growing closer...");
+
+    let infoTab = document.getElementById("infoTab");
+    let bossHP = document.getElementById("bossHP");
+    let healthv = document.getElementById("healthv");
+    let potionv = document.getElementById("potionv");
+    let weaponv = document.getElementById("weaponv");
+    let bossInfo = document.getElementById("bossInfo");
+    let wslot = document.getElementById("wslot");
+    let h = 3;
+    let health = 100;
+    let i = frenemies.length - 1;
+    let w = 0;
+    let cw = w;
+
+    healthv.innerHTML = health;
+    potionv.innerHTML = h;
+    weaponv.innerHTML = weaponClass[w].name;
+
+    function loadBoss() {
+        if (parseInt(i) < 0){
+            alert("Congratulations, You have defeated your enemies and stand victorious over their smoldering corpses");
+            location.reload()
+        }
+        bossHP.innerHTML = frenemies[i].hp;
+        bossInfo.innerHTML = frenemies[i].name;
+        infoTab.innerHTML += frenemies[i].name + " approaches."
+    }
+
+
+
+    loadBoss(i);
+
+    function attack() {
+        let att = Math.floor((Math.random() * 10 + weaponClass[cw].damage));
+        let cc = crit(att);
+        if ((att * 2) === cc){
+            infoTab.innerHTML = "Critical Hit! You did " + att + " damage. "
+        }
+        else if ((att * 1.5) === cc){
+            infoTab.innerHTML = "You landed a lucky blow and did "+ att + " damage. ";
+        }
+        else
+            infoTab.innerHTML = "You did "+ att + " damage. ";
+        frenemies[i].hp -= att;
+        bossHP.innerHTML = frenemies[i].hp;
+        if (frenemies[i].hp <= 0){
+            alert("You have defeated " + frenemies[i].name + ".");
+            if (w < weaponClass.length - 1){
+                alert("You see a " + weaponClass[(w+1)].name + " lying on the ground. You pick it up.")
+            }
+            i--;
+            loadBoss();
+            weaponUnlock()
+            }
+        else {
+            bossDamage()
+        }
+    }
+
+    function runAway() {
+        let runChance = Math.random() * 100;
+        if (runChance >= 40) {
+            alert("You got away!");
+            location.reload()
+            /*                          // Can't figure out how to reset hp variables sticking to reload at this point
+            infoTab.innerHTML = "A new foe approaches!";
+            do {
+                i++
+            }
+            while (i < frenemies.length - 1);
+            loadBoss()
+
+            */
+        } else{
+            infoTab.innerHTML = "You failed to get away. ";
+            bossDamage()
+        }
+    }
+
+    function hPotions() {
+        if (h > 0) {
+            let heal = Math.floor(Math.random() * 35 + 15);
+            health += heal;
+            healthv.innerHTML = health;
+            h--;
+            potionv.innerHTML = h;
+
+        } else {
+            infoTab.innerHTML = "You are out of Potions!"
+        }
+    }
+
+    function weaponUnlock() {
+        if (w < weaponClass.length - 1) {
+            w++;
+            wslot.innerHTML += "<button id='" + w + "' onclick=w"+ w +"()><div id='wname" + w + "'></div></button>";
+            document.getElementById("wname" + w).innerHTML = weaponClass[w].name
+        }
+    }
+/*
+    function changeW() {
+        var x = w;
+        switch (x) {
+
+            case 1:
+                if (cw < x){
+                    cw++
+                } else if (cw > x){
+                    cw--
+                }
+                weaponv.innerHTML = weaponClass[cw].name;
+                break;
+
+            case 2:
+                if (cw < x){
+                    cw++
+                } else if (cw > x){
+                    cw--
+                }
+                weaponv.innerHTML = weaponClass[cw].name;
+                break;
+
+            case 3:
+                if (cw < x){
+                    cw++
+                } else if (cw > x){
+                    cw--
+                }
+                weaponv.innerHTML = weaponClass[cw].name;
+                break;
+
+            case 4:
+                if (cw < x){
+                    cw++
+                } else if (cw > x){
+                    cw--
+                }
+                weaponv.innerHTML = weaponClass[cw].name;
+                break;
+
+            case 5:
+                if (cw < x){
+                    cw++
+                } else if (cw > x){
+                    cw--
+                }
+                weaponv.innerHTML = weaponClass[cw].name;
+                break;
+
+            case 6:
+                if (cw < x){
+                    cw++
+                } else if (cw > x){
+                    cw--
+                }
+                weaponv.innerHTML = weaponClass[cw].name;
+                break;
+
+            case 7:
+                if (cw < x){
+                    cw++
+                } else if (cw > x){
+                    cw--
+                }
+                weaponv.innerHTML = weaponClass[cw].name;
+                break;
+        }
+    } */
+
+</script>
+
+</body>
+</html>
